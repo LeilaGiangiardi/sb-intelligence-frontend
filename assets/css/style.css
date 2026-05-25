@@ -1,0 +1,493 @@
+/* ==========================================================================
+   DESIGN SYSTEM GLOBAL - SB INTELLIGENCE SYSTEM (PADRÃO OURO)
+   ========================================================================== */
+
+:root {
+    /* Cores Corporativas e de Identidade */
+    --azul-principal: #0F1E36;    /* Azul Marinho Premium Profundo */
+    --azul-sidebar: #0B1629;      /* Sidebar com tonalidade ligeiramente mais escura */
+    --dourado: #C89B3C;           /* Dourado Corporativo (Apoio à Decisão / Êxito) */
+    --fundo: #F4F6F9;             /* Cinza Claro Moderno para fundo de Tela */
+    --branco: #FFFFFF;            /* Branco Puro para Cards e Containers */
+    
+    /* Tipografia e Textos */
+    --texto-escuro: #1E293B;      /* Cinza Grafite para Títulos e Textos Principais */
+    --texto-secundario: #64748B;  /* Cinza Médio para Detalhes e Legendas */
+    --borda: #E2E8F0;             /* Cor de Borda Suave para Separação */
+
+    /* Badges e Status de Negócio (Netflix & Compliance) */
+    --sucesso: #2E7D32;           /* Verde para Regular, Pago e Liberado */
+    --alerta: #ED6C02;            /* Laranja para Prazos Médios e Alertas */
+    --erro: #D32F2F;              /* Vermelho para Vencido, Bloqueado e Não Pago */
+}
+
+/* ==========================================================================
+   RESET E CONFIGURAÇÕES DE BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--fundo);
+    color: var(--texto-escuro);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   ESTRUTURA DE LAYOUT EM REDE (FLUIDO E TOTAL)
+   ========================================================================== */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+/* Sidebar Fixa */
+.sidebar {
+    width: 260px;
+    background-color: var(--azul-sidebar);
+    color: var(--branco);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+/* ==========================================
+   LOGO DA SIDEBAR COM SUBTÍTULO CENTRALIZADO
+   ========================================== */
+.sidebar-logo {
+    padding: 30px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+    text-align: center;     /* Centraliza as linhas de texto */
+    align-items: center;    /* Força os blocos a se alinharem no meio */
+}
+
+.logo-main {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--dourado);
+    line-height: 1.2;
+}
+
+.logo-subtitle {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    gap: 4px;
+}
+
+.nav-link {
+    padding: 14px 24px;
+    color: #94A3B8;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--branco);
+    background-color: rgba(255, 255, 255, 0.04);
+    border-left-color: var(--dourado);
+}
+
+/* Área de Conteúdo Principal Flexível */
+.main-content, .main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--fundo);
+    min-width: 0; /* Previne estouros de layout */
+}
+
+/* Container de Conteúdo Geral */
+.container {
+    padding: 30px;
+    width: 100%;
+    max-width: 98% !important; /* Força expansão total idêntica ao Financeiro */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ==========================================================================
+   CABEÇALHO SUPERIOR PADRÃO OURO (HEADER GLOBAL 85PX)
+   ========================================================================== */
+.top-header, .header {
+    height: 85px;
+    background-color: var(--branco);
+    border-bottom: 1px solid var(--borda);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+.top-header h2, .header h2 {
+    font-size: 24px;
+    color: var(--azul-principal);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Perfil e Avatar */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--texto-escuro);
+}
+
+.user-profile .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--dourado);
+    color: var(--branco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(200, 155, 60, 0.3);
+}
+
+/* ==========================================================================
+   CARDS E BLOCOS DE COMPONENTES
+   ========================================================================== */
+.card {
+    background: var(--branco);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    padding: 24px;
+    width: 100%;
+    border-top: 4px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+}
+
+.card-title {
+    font-size: 16px;
+    color: var(--azul-principal);
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--texto-escuro);
+    margin: 8px 0;
+}
+/* (Aqui em cima vai estar todo o resto do seu código CSS que já existe) */
+
+
+/* Grid de KPIs - Totalmente Largo e Adaptável */
+.kpi-grid {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.kpi-grid .card {
+    flex: 1; /* Força todos os cards a se expandirem em frações idênticas */
+    margin: 0;
+}
+/* ==========================================
+   BORDAS DE DESTAQUE PARA OS CARDS (ACCENTS)
+   ========================================== */
+.card.accent-azul { border-top-color: var(--azul-principal); }
+.card.accent-verde { border-top-color: var(--sucesso); }
+.card.accent-laranja { border-top-color: var(--alerta); }
+.card.accent-vermelho { border-top-color: var(--erro); }
+.card.accent-dourado { border-top-color: var(--dourado); }
+
+/* ==========================================================================
+   ELEMENTOS DE FORMULÁRIO E FILTROS CONTEXTUAIS
+   ========================================================================== */
+.search-bar {
+    padding: 10px 16px;
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.2s;
+    background-color: #FAFAFA;
+}
+
+.search-bar:focus {
+    border-color: var(--azul-principal);
+    background-color: var(--branco);
+}
+
+/* ==========================================================================
+   TABELAS PROFISSIONAIS (B2B AUDITORIA)
+   ========================================================================== */
+.table-base, table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.table-base th, table th {
+    padding: 14px 16px;
+    background-color: #F8FAFC;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--borda);
+}
+
+.table-base td, table td {
+    padding: 16px;
+    font-size: 14px;
+    color: var(--texto-escuro);
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: middle;
+}
+
+.table-base tr:hover, table tr:hover {
+    background-color: #F8FAFC;
+}
+
+/* Badges de Status Parametrizadas */
+.badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+}
+
+.badge.ok, .badge.sucesso {
+    background-color: #E8F5E9;
+    color: var(--sucesso);
+}
+
+.badge.alerta {
+    background-color: #FFF3E0;
+    color: var(--alerta);
+}
+
+.badge.erro {
+    background-color: #FFEBEE;
+    color: var(--erro);
+}
+
+/* ==========================================================================
+   BOTÕES DE AÇÃO PADRONIZADOS
+   ========================================================================== */
+/* Botão Principal Call To Action (+ Cadastrar / + Emitir) */
+.btn-novo {
+    background-color: var(--dourado);
+    color: var(--branco);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 2px 5px rgba(200, 155, 60, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-novo:hover {
+    filter: brightness(0.95);
+    box-shadow: 0 4px 8px rgba(200, 155, 60, 0.3);
+}
+
+/* Botões Internos de Linha de Tabela */
+.btn-table {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--borda);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: var(--branco);
+    color: var(--texto-escuro);
+    transition: all 0.2s ease;
+}
+
+.btn-table:hover {
+    background-color: #F1F5F9;
+    border-color: var(--texto-secundario);
+}
+
+/* Link Secundário de Navegação Rápida (Ver Todas >) */
+.btn-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dourado);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.btn-link:hover {
+    color: var(--azul-principal);
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   TIMELINES E COMPONENTES OPERACIONAIS (VISÃO CLIENTE)
+   ========================================================================== */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 10px;
+    margin-top: 15px;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.timeline-item .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--borda);
+    flex-shrink: 0;
+}
+
+.timeline-item.completed .dot { background-color: var(--sucesso); box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.15); }
+.timeline-item.scheduled .dot { background-color: var(--dourado); box-shadow: 0 0 0 4px rgba(200, 155, 60, 0.15); }
+.timeline-item.pending .dot { background-color: var(--erro); box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.15); }
+
+
+/* ==========================================================================
+   COMPONENTES REUSÁVEIS: FILTROS, AÇÕES E TEXTOS AUXILIARES
+   ========================================================================== */
+
+/* Grupo de filtros alinhados lado a lado */
+.crm-filter-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap; /* Garante que não quebre em telas menores */
+}
+
+/* Campos de Seleção (Dropdowns) padronizados */
+.select-filter {
+    padding: 8px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    background-color: var(--branco);
+    color: var(--texto-escuro);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.select-filter:hover, .select-filter:focus {
+    border-color: var(--azul-principal);
+}
+
+/* Grupo de botões de ação nas tabelas */
+.btn-action-group {
+    display: flex;
+    gap: 6px;
+}
+
+/* Texto de legenda e detalhes (cinza pequeno) */
+.text-detail { 
+    font-size: 12px; 
+    color: var(--texto-secundario); 
+    margin-top: 4px; 
+}
+/* ==========================================
+   COMPONENTE: SINO DE NOTIFICAÇÃO
+   ========================================== */
+.notification-container {
+    position: relative;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.notification-bell {
+    font-size: 20px;
+    color: var(--azul-principal);
+    transition: transform 0.3s ease;
+}
+
+/* Animação de pulsação quando há notificações */
+.has-notification::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--erro);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Dropdown de Notificações */
+.notif-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 300px;
+    background: var(--branco);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 100;
+    padding: 10px 0;
+}
+
+.notif-menu.active { display: block; }
+
+.notif-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 12px;
+    color: var(--texto-escuro);
+}
+
+.notif-item:hover { background-color: #F8FAFC; }

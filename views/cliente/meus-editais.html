@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Editais | SB Intelligence</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        /* ==========================================
+           ESTILOS DO MODAL (VISÃO DO CLIENTE)
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 30, 54, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-container {
+            background-color: var(--branco);
+            width: 600px;
+            max-width: 95%;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            border-top: 6px solid var(--azul-principal);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-container { transform: scale(1); }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--borda);
+            padding-bottom: 12px;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--texto-secundario);
+            cursor: pointer;
+        }
+
+        .modal-close-btn:hover { color: var(--erro); }
+        .modal-section-title { font-size: 12px; font-weight: 700; color: var(--azul-principal); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .modal-summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        .modal-summary-table td {
+            padding: 8px 10px;
+            border: 1px solid var(--borda);
+        }
+        .modal-summary-table td.label {
+            background-color: #F8FAFC;
+            font-weight: 600;
+            color: var(--texto-escuro);
+            width: 30%;
+        }
+
+        .modal-actions-row { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 12px;
+            border-top: 1px solid var(--borda); 
+            padding-top: 16px; 
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <span class="logo-main">SB Intelligence System</span>
+                <span class="logo-subtitle">Portal do Cliente</span>
+            </div>
+            <nav>
+                <a href="dashboard-cliente.html" class="nav-link">Visão Geral</a>
+                <a href="meus-editais.html" class="nav-link active">Meus Editais (Match)</a>
+                <a href="ged-cliente.html" class="nav-link">Central de Documentos (GED)</a>
+                <a href="faturas-comissoes.html" class="nav-link">Faturas e Comissões</a>
+                <a href="#" class="nav-link">Falar com Consultor</a>
+            </nav>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-header">
+                <div class="header-left">
+                    <h2>Oportunidades e Disputas</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <div style="text-align: right; line-height: 1.2;">
+                            <span style="display: block; font-weight: 700; color: var(--azul-principal);">MedSupply Brasil</span>
+                            <span style="font-size: 11px; color: var(--texto-secundario);">Plano Standard</span>
+                        </div>
+                        <div class="avatar" style="background-color: var(--azul-principal);">M</div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="container">
+                
+                <div class="card accent-dourado">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <div>
+                            <h3 class="card-title" style="margin-bottom: 4px;">Meu Radar de Licitações</h3>
+                            <p class="text-detail">Acompanhe os editais capturados pelo nosso robô e o status das suas disputas.</p>
+                        </div>
+                        <div class="crm-filter-group">
+                            <input type="text" class="search-bar" id="searchEditais" placeholder="Buscar por órgão, objeto ou edital..." style="width: 280px;">
+                            <select class="select-filter" id="filterStatus">
+                                <option value="">Todos os Status</option>
+                                <option value="Novo Match">Novo Match (Pendente)</option>
+                                <option value="Autorizado">Autorizado</option>
+                                <option value="Em Disputa">Em Disputa (Ao Vivo)</option>
+                                <option value="Vencido">Vencido / Homologado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="card accent-azul">
+                        <h3 class="card-title">Novos Matches</h3>
+                        <h2>4 Editais</h2>
+                        <p class="text-detail" style="color: var(--azul-principal); font-weight: 600;">Aguardando sua autorização</p>
+                    </div>
+                    <div class="card accent-dourado">
+                        <h3 class="card-title">Valor em Análise (SB)</h3>
+                        <h2>R$ 1.250.000</h2>
+                        <p class="text-detail">Potencial sob análise dos consultores</p>
+                    </div>
+                    <div class="card accent-laranja">
+                        <h3 class="card-title">Disputas Hoje</h3>
+                        <h2>1 Pregão</h2>
+                        <p class="text-detail" style="color: var(--alerta); font-weight: 600;">Acontecendo ao vivo</p>
+                    </div>
+                    <div class="card accent-verde">
+                        <h3 class="card-title">Vitórias (Este Ano)</h3>
+                        <h2 style="color: var(--sucesso);">18 Atas</h2>
+                        <p class="text-detail">Homologadas e prontas para empenho</p>
+                    </div>
+                </div>
+
+                <div class="card accent-azul">
+                    <table class="table-base">
+                        <thead>
+                            <tr>
+                                <th>Órgão / Edital</th>
+                                <th>Objeto Licitado</th>
+                                <th>Valor Estimado</th>
+                                <th>Data de Abertura</th>
+                                <th>Status da Oportunidade</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editaisTableBody">
+                            
+                            <tr data-id="ED-098" data-org="Prefeitura de Manaus" data-objeto="Aquisição de Insumos Descartáveis Hospitalares" data-abertura="10/06/2026 às 09:00" data-portal="Portal Comprasnet" data-status="Novo Match" data-valor="R$ 320.000,00">
+                                <td><strong>Pref. de Manaus</strong><br><span class="text-detail">Pregão 098/2026</span></td>
+                                <td>Material Hospitalar</td>
+                                <td style="font-weight: 600;">R$ 320.000,00</td>
+                                <td>10/06/2026</td>
+                                <td><span class="badge" style="background: #E3F2FD; color: var(--azul-principal);">Novo Match</span></td>
+                                <td class="btn-action-group">
+                                    <button class="btn-novo" style="padding: 6px 12px; font-size: 12px;" onclick="openClientModal(this)">Ver e Autorizar</button>
+                                </td>
+                            </tr>
+
+                            <tr data-id="ED-042" data-org="Secretaria de Estado da Saúde - SP" data-objeto="Kits de Monitoramento Glicêmico" data-abertura="02/06/2026 às 14:00" data-portal="Licitações-E (BB)" data-status="Autorizado" data-valor="R$ 450.000,00">
+                                <td><strong>SES - SP</strong><br><span class="text-detail">Pregão 042/2026</span></td>
+                                <td>Kit Diabetes</td>
+                                <td style="font-weight: 600;">R$ 450.000,00</td>
+                                <td>02/06/2026</td>
+                                <td><span class="badge ok" style="background: #FFF3E0; color: var(--alerta);">Análise SB (SAD)</span></td>
+                                <td class="btn-action-group">
+                                    <button class="btn-table" onclick="openClientModal(this)">Ver Detalhes</button>
+                                </td>
+                            </tr>
+
+                            <tr data-id="ED-112" data-org="Prefeitura de Curitiba" data-objeto="Aquisição de Amoxicilina + Clavulanato" data-abertura="Hoje às 14:00" data-portal="Portal de Compras Públicas" data-status="Em Disputa" data-valor="R$ 1.100.000,00">
+                                <td><strong>Pref. Curitiba</strong><br><span class="text-detail">Pregão 112/2026</span></td>
+                                <td>Amoxicilina</td>
+                                <td style="font-weight: 600;">R$ 1.100.000,00</td>
+                                <td style="color: var(--erro); font-weight: bold;">HOJE</td>
+                                <td><span class="badge" style="background: #FFF8E1; color: var(--dourado);">🔴 Em Disputa</span></td>
+                                <td class="btn-action-group">
+                                    <button class="btn-table" style="color: var(--dourado); border-color: var(--dourado);" onclick="openClientModal(this)">Acompanhar SB</button>
+                                </td>
+                            </tr>
+
+                            <tr data-id="ED-015" data-org="UPA Zona Leste" data-objeto="Luvas de Procedimento Não Cirúrgico" data-abertura="15/05/2026" data-portal="Comprasnet" data-status="Vencido" data-valor="R$ 250.000,00">
+                                <td><strong>UPA Zona Leste</strong><br><span class="text-detail">Pregão 015/2026</span></td>
+                                <td>Luvas de Procedimento</td>
+                                <td style="font-weight: 600;">R$ 250.000,00</td>
+                                <td>15/05/2026</td>
+                                <td><span class="badge sucesso">Vencido 🏆</span></td>
+                                <td class="btn-action-group">
+                                    <button class="btn-table" onclick="openClientModal(this)">Ver Histórico</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <div id="clientModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-container" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <span id="mId" class="badge" style="background:#ECEFF1; color:#37474F; margin-bottom: 6px;">ID</span>
+                    <h2 id="mTitle" style="font-size: 18px; color: var(--azul-principal);">Resumo da Oportunidade</h2>
+                </div>
+                <button class="modal-close-btn" onclick="document.getElementById('clientModal').classList.remove('active')">✕</button>
+            </div>
+            
+            <div>
+                <span class="modal-section-title">Dados Estruturados pelo Robô SB</span>
+                <table class="modal-summary-table">
+                    <tr><td class="label">Órgão Licitante</td><td id="mOrg">...</td></tr>
+                    <tr><td class="label">Portal / Plataforma</td><td id="mPortal">...</td></tr>
+                    <tr><td class="label">Objeto Licitado</td><td id="mObjeto">...</td></tr>
+                    <tr><td class="label">Data de Disputa</td><td id="mAbertura" style="font-weight: 600;">...</td></tr>
+                    <tr><td class="label">Valor Estimado</td><td id="mValue" style="font-weight: 700; color: var(--sucesso);">R$ 0,00</td></tr>
+                </table>
+            </div>
+
+            <div style="background-color: #F8FAFC; padding: 12px; border-radius: 6px; border-left: 4px solid var(--dourado);">
+                <span class="modal-section-title" style="color: var(--dourado);">Parecer Técnico SB Intelligence</span>
+                <p id="mStatusText" style="font-size: 13px; color: var(--texto-escuro); margin-top: 6px;">
+                    Análise pendente. Aguardando sua autorização para iniciar o estudo de viabilidade.
+                </p>
+            </div>
+
+            <div class="modal-actions-row" id="modalActions">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // Filtro de Busca Dinâmico
+        document.getElementById('searchEditais').addEventListener('keyup', filterTable);
+        document.getElementById('filterStatus').addEventListener('change', filterTable);
+
+        function filterTable() {
+            let textFilter = document.getElementById('searchEditais').value.toLowerCase();
+            let statusFilter = document.getElementById('filterStatus').value.toLowerCase();
+            let rows = document.querySelectorAll('#editaisTableBody tr');
+            
+            rows.forEach(row => {
+                let rowText = row.innerText.toLowerCase();
+                let badgeText = row.querySelector('.badge').innerText.toLowerCase();
+                
+                let matchesText = rowText.includes(textFilter);
+                let matchesStatus = statusFilter === "" || badgeText.includes(statusFilter);
+
+                row.style.display = (matchesText && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        // Função de Abertura do Modal do Cliente
+        function openClientModal(btn) {
+            let tr = btn.closest('tr');
+            
+            // Popula os dados
+            document.getElementById('mId').innerText = tr.getAttribute('data-id');
+            document.getElementById('mTitle').innerText = "Edital: " + tr.querySelector('.text-detail').innerText;
+            document.getElementById('mOrg').innerText = tr.getAttribute('data-org');
+            document.getElementById('mPortal').innerText = tr.getAttribute('data-portal');
+            document.getElementById('mObjeto').innerText = tr.getAttribute('data-objeto');
+            document.getElementById('mAbertura').innerText = tr.getAttribute('data-abertura');
+            document.getElementById('mValue').innerText = tr.getAttribute('data-valor');
+
+            let status = tr.getAttribute('data-status');
+            let actionsArea = document.getElementById('modalActions');
+            let statusText = document.getElementById('mStatusText');
+
+            // Personaliza o texto e botões com base no status do edital
+            if (status === "Novo Match") {
+                statusText.innerHTML = "Nosso robô identificou este edital com <strong>Alta Compatibilidade</strong> ao seu portfólio. Autorize a participação para que nossos consultores calculem as margens e a documentação necessária.";
+                actionsArea.innerHTML = `
+                    <button class="btn-table" onclick="alert('Baixando edital original...')">Baixar Edital PDF</button>
+                    <button class="btn-novo" style="background:var(--sucesso);" onclick="autorizar(this, '${tr.getAttribute('data-id')}')">Autorizar Consultoria a Participar</button>
+                `;
+            } else if (status === "Autorizado") {
+                statusText.innerHTML = "Autorização recebida! O Sistema de Apoio à Decisão (SAD) da SB está analisando o histórico de preços dos concorrentes para formular a melhor estratégia de lances.";
+                actionsArea.innerHTML = `<button class="btn-table" onclick="document.getElementById('clientModal').classList.remove('active')">Fechar Aba</button>`;
+            } else if (status === "Em Disputa") {
+                statusText.innerHTML = "A sala de disputa está aberta <strong>AGORA</strong>. Seu consultor técnico está operando a rodada de lances competitivos em nome da sua empresa.";
+                actionsArea.innerHTML = `<button class="btn-novo" style="background:var(--dourado);" onclick="alert('Abrindo visualização simulada da sala de disputa...')">Visualizar Tela do Consultor</button>`;
+            } else if (status === "Vencido") {
+                statusText.innerHTML = "Vitória Homologada! O órgão já publicou o resultado final e a emissão de nota de empenho está liberada. Parabéns por mais um contrato ganho!";
+                actionsArea.innerHTML = `
+                    <button class="btn-table" onclick="alert('Baixando Diário Oficial...')">Baixar Homologação</button>
+                    <button class="btn-novo" style="background:var(--azul-principal);" onclick="alert('Abrindo detalhes do comissionamento...')">Ver Fechamento Financeiro</button>
+                `;
+            }
+
+            document.getElementById('clientModal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (event.target.id === "clientModal") {
+                document.getElementById('clientModal').classList.remove('active');
+            }
+        }
+
+        function autorizar(btn, id) {
+            btn.innerHTML = "Participação Autorizada ✓";
+            btn.style.backgroundColor = "var(--texto-secundario)";
+            btn.disabled = true;
+            alert(`O edital ${id} foi enviado para a fila de Análise (SAD) da SB Intelligence! O status mudará em alguns minutos.`);
+            
+            // Simulação de fechamento e atualização da tabela (Visual)
+            setTimeout(() => {
+                document.getElementById('clientModal').classList.remove('active');
+                let tr = document.querySelector(`tr[data-id="${id}"]`);
+                tr.querySelector('.badge').className = "badge ok";
+                tr.querySelector('.badge').style.background = "#FFF3E0";
+                tr.querySelector('.badge').style.color = "var(--alerta)";
+                tr.querySelector('.badge').innerText = "Análise SB (SAD)";
+                tr.setAttribute('data-status', 'Autorizado');
+                tr.querySelector('.btn-novo').outerHTML = `<button class="btn-table" onclick="openClientModal(this)">Ver Detalhes</button>`;
+            }, 800);
+        }
+    </script>
+</body>
+</html>
