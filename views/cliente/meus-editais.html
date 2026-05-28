@@ -7,8 +7,56 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <style>
         /* ==========================================
-           ESTILOS DO MODAL (VISÃO DO CLIENTE)
+           ESTILOS ESPECÍFICOS: MEDIDORES DE WIN RATE E MODAL
            ========================================== */
+        .win-rate-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-bg {
+            background-color: #E2E8F0;
+            border-radius: 4px;
+            flex: 1;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .rate-text {
+            font-size: 13px;
+            font-weight: 700;
+            width: 40px;
+            text-align: right;
+        }
+
+        /* Cores dos medidores de probabilidade */
+        .rate-high { background-color: var(--sucesso); color: var(--sucesso); }
+        .rate-medium { background-color: var(--alerta); color: var(--alerta); }
+        .rate-low { background-color: var(--erro); color: var(--erro); }
+
+        /* Badge explicativa do algoritmo SAD */
+        .ai-badge {
+            background-color: #E3F2FD;
+            color: var(--azul-principal);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Estrutura do Modal Pop-up */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -32,7 +80,7 @@
 
         .modal-container {
             background-color: var(--branco);
-            width: 600px;
+            width: 620px;
             max-width: 95%;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.18);
@@ -82,7 +130,7 @@
             background-color: #F8FAFC;
             font-weight: 600;
             color: var(--texto-escuro);
-            width: 30%;
+            width: 32%;
         }
 
         .modal-actions-row { 
@@ -107,16 +155,24 @@
                 <a href="meus-editais.html" class="nav-link active">Meus Editais (Match)</a>
                 <a href="ged-cliente.html" class="nav-link">Central de Documentos (GED)</a>
                 <a href="faturas-comissoes.html" class="nav-link">Faturas e Comissões</a>
-                <a href="#" class="nav-link">Falar com Consultor</a>
+                <a href="falar-consultor.html" class="nav-link">Falar com Consultor</a>
             </nav>
         </aside>
 
         <main class="main-wrapper">
             <header class="top-header">
                 <div class="header-left">
-                    <h2>Oportunidades e Disputas</h2>
+                    <h2>Oportunidades e Auditoria Preditiva</h2>
                 </div>
-                <div class="header-right">
+                <div class="header-right" style="display: flex; align-items: center;">
+                    <div class="notification-container" onclick="toggleNotif()">
+                        <div class="notification-bell has-notification">🔔</div>
+                        <div class="notif-menu" id="notifMenu">
+                            <div class="notif-item"><strong>Nova Licitação:</strong> Pregão 112 encontrado!</div>
+                            <div class="notif-item"><strong>GED:</strong> Alvará vence em 4 dias.</div>
+                            <div class="notif-item"><strong>Financeiro:</strong> Pagamento aprovado.</div>
+                        </div>
+                    </div>
                     <div class="user-profile">
                         <div style="text-align: right; line-height: 1.2;">
                             <span style="display: block; font-weight: 700; color: var(--azul-principal);">MedSupply Brasil</span>
@@ -133,16 +189,15 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                         <div>
                             <h3 class="card-title" style="margin-bottom: 4px;">Meu Radar de Licitações</h3>
-                            <p class="text-detail">Acompanhe os editais capturados pelo nosso robô e o status das suas disputas.</p>
+                            <p class="text-detail">Acompanhe os editais capturados pelo Web Scraper e analise as chances de vitória calculadas pela inteligência preditiva (SAD).</p>
                         </div>
                         <div class="crm-filter-group">
-                            <input type="text" class="search-bar" id="searchEditais" placeholder="Buscar por órgão, objeto ou edital..." style="width: 280px;">
-                            <select class="select-filter" id="filterStatus">
-                                <option value="">Todos os Status</option>
-                                <option value="Novo Match">Novo Match (Pendente)</option>
-                                <option value="Autorizado">Autorizado</option>
-                                <option value="Em Disputa">Em Disputa (Ao Vivo)</option>
-                                <option value="Vencido">Vencido / Homologado</option>
+                            <input type="text" class="search-bar" id="searchEditais" placeholder="Buscar por órgão, objeto ou edital..." style="width: 260px;">
+                            <select class="select-filter" id="filterMatch">
+                                <option value="">Todas as Probabilidades</option>
+                                <option value="Alta">Alta (> 70%)</option>
+                                <option value="Média">Média (40% - 70%)</option>
+                                <option value="Baixa">Baixa (< 40%)</option>
                             </select>
                         </div>
                     </div>
@@ -154,20 +209,20 @@
                         <h2>4 Editais</h2>
                         <p class="text-detail" style="color: var(--azul-principal); font-weight: 600;">Aguardando sua autorização</p>
                     </div>
-                    <div class="card accent-dourado">
-                        <h3 class="card-title">Valor em Análise (SB)</h3>
-                        <h2>R$ 1.250.000</h2>
-                        <p class="text-detail">Potencial sob análise dos consultores</p>
+                    <div class="card accent-verde">
+                        <h3 class="card-title">Chances de Sucesso Alta</h3>
+                        <h2>2 Oportunidades</h2>
+                        <p class="text-detail" style="color: var(--sucesso); font-weight: 600;">Win Rate acima de 75%</p>
                     </div>
-                    <div class="card accent-laranja">
-                        <h3 class="card-title">Disputas Hoje</h3>
-                        <h2>1 Pregão</h2>
-                        <p class="text-detail" style="color: var(--alerta); font-weight: 600;">Acontecendo ao vivo</p>
+                    <div class="card accent-dourado">
+                        <h3 class="card-title">Valor em Análise</h3>
+                        <h2>R$ 1.250.000</h2>
+                        <p class="text-detail">Volume sob triagem estatística</p>
                     </div>
                     <div class="card accent-verde">
-                        <h3 class="card-title">Vitórias (Este Ano)</h3>
+                        <h3 class="card-title">Vitórias Acumuladas</h3>
                         <h2 style="color: var(--sucesso);">18 Atas</h2>
-                        <p class="text-detail">Homologadas e prontas para empenho</p>
+                        <p class="text-detail">Contratos ativos faturados</p>
                     </div>
                 </div>
 
@@ -178,55 +233,71 @@
                                 <th>Órgão / Edital</th>
                                 <th>Objeto Licitado</th>
                                 <th>Valor Estimado</th>
-                                <th>Data de Abertura</th>
-                                <th>Status da Oportunidade</th>
+                                <th style="width: 260px;">Probabilidade de Vitória (SAD)</th>
+                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="editaisTableBody">
                             
-                            <tr data-id="ED-098" data-org="Prefeitura de Manaus" data-objeto="Aquisição de Insumos Descartáveis Hospitalares" data-abertura="10/06/2026 às 09:00" data-portal="Portal Comprasnet" data-status="Novo Match" data-valor="R$ 320.000,00">
+                            <tr data-id="ED-098" data-org="Prefeitura de Manaus" data-objeto="Aquisição de Insumos Descartáveis Hospitalares" data-abertura="10/06/2026 às 09:00" data-portal="Portal Comprasnet" data-match="Alta" data-status="Novo Match" data-valor="R$ 320.000,00" data-prob="92%" data-reason="Poucos concorrentes homologados na região Norte.">
                                 <td><strong>Pref. de Manaus</strong><br><span class="text-detail">Pregão 098/2026</span></td>
                                 <td>Material Hospitalar</td>
                                 <td style="font-weight: 600;">R$ 320.000,00</td>
-                                <td>10/06/2026</td>
-                                <td><span class="badge" style="background: #E3F2FD; color: var(--azul-principal);">Novo Match</span></td>
-                                <td class="btn-action-group">
-                                    <button class="btn-novo" style="padding: 6px 12px; font-size: 12px;" onclick="openClientModal(this)">Ver e Autorizar</button>
+                                <td>
+                                    <div class="win-rate-container">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill rate-high" style="width: 92%;"></div></div>
+                                        <span class="rate-text" style="color: var(--sucesso);">92%</span>
+                                    </div>
+                                    <span class="ai-badge">🧠 Histórico Regional Favorável</span>
                                 </td>
+                                <td><span class="badge" style="background: #E3F2FD; color: var(--azul-principal);">Novo Match</span></td>
+                                <td><button class="btn-novo" style="padding: 6px 12px; font-size: 12px;" onclick="openClientModal(this)">Ver e Autorizar</button></td>
                             </tr>
 
-                            <tr data-id="ED-042" data-org="Secretaria de Estado da Saúde - SP" data-objeto="Kits de Monitoramento Glicêmico" data-abertura="02/06/2026 às 14:00" data-portal="Licitações-E (BB)" data-status="Autorizado" data-valor="R$ 450.000,00">
+                            <tr data-id="ED-042" data-org="Secretaria de Estado da Saúde - SP" data-objeto="Kits de Monitoramento Glicêmico" data-abertura="02/06/2026 às 14:00" data-portal="Licitações-E (BB)" data-match="Alta" data-status="Autorizado" data-valor="R$ 450.000,00" data-prob="78%" data-reason="MedSupply possui as melhores certidões para este lote.">
                                 <td><strong>SES - SP</strong><br><span class="text-detail">Pregão 042/2026</span></td>
                                 <td>Kit Diabetes</td>
                                 <td style="font-weight: 600;">R$ 450.000,00</td>
-                                <td>02/06/2026</td>
-                                <td><span class="badge ok" style="background: #FFF3E0; color: var(--alerta);">Análise SB (SAD)</span></td>
-                                <td class="btn-action-group">
-                                    <button class="btn-table" onclick="openClientModal(this)">Ver Detalhes</button>
+                                <td>
+                                    <div class="win-rate-container">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill rate-high" style="width: 78%;"></div></div>
+                                        <span class="rate-text" style="color: var(--sucesso);">78%</span>
+                                    </div>
+                                    <span class="ai-badge">🧠 Score de Documentos: Máximo</span>
                                 </td>
+                                <td><span class="badge ok" style="background: #FFF3E0; color: var(--alerta);">Análise SB (SAD)</span></td>
+                                <td><button class="btn-table" onclick="openClientModal(this)">Ver Detalhes</button></td>
                             </tr>
 
-                            <tr data-id="ED-112" data-org="Prefeitura de Curitiba" data-objeto="Aquisição de Amoxicilina + Clavulanato" data-abertura="Hoje às 14:00" data-portal="Portal de Compras Públicas" data-status="Em Disputa" data-valor="R$ 1.100.000,00">
+                            <tr data-id="ED-112" data-org="Prefeitura de Curitiba" data-objeto="Aquisição de Amoxicilina + Clavulanato" data-abertura="Hoje às 14:00" data-portal="Portal de Compras Públicas" data-match="Média" data-status="Em Disputa" data-valor="R$ 1.100.000,00" data-prob="54%" data-reason="Forte concorrência do distribuidor X mapeada.">
                                 <td><strong>Pref. Curitiba</strong><br><span class="text-detail">Pregão 112/2026</span></td>
                                 <td>Amoxicilina</td>
                                 <td style="font-weight: 600;">R$ 1.100.000,00</td>
-                                <td style="color: var(--erro); font-weight: bold;">HOJE</td>
-                                <td><span class="badge" style="background: #FFF8E1; color: var(--dourado);">🔴 Em Disputa</span></td>
-                                <td class="btn-action-group">
-                                    <button class="btn-table" style="color: var(--dourado); border-color: var(--dourado);" onclick="openClientModal(this)">Acompanhar SB</button>
+                                <td>
+                                    <div class="win-rate-container">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill rate-medium" style="width: 54%;"></div></div>
+                                        <span class="rate-text" style="color: var(--alerta);">54%</span>
+                                    </div>
+                                    <span class="ai-badge" style="background-color: #FFF3E0; color: var(--alerta);">⚠️ Margem de Lance Estreita</span>
                                 </td>
+                                <td><span class="badge" style="background: #FFF8E1; color: var(--dourado);">🔴 Em Disputa</span></td>
+                                <td><button class="btn-table" style="color: var(--dourado); border-color: var(--dourado);" onclick="openClientModal(this)">Acompanhar SB</button></td>
                             </tr>
 
-                            <tr data-id="ED-015" data-org="UPA Zona Leste" data-objeto="Luvas de Procedimento Não Cirúrgico" data-abertura="15/05/2026" data-portal="Comprasnet" data-status="Vencido" data-valor="R$ 250.000,00">
-                                <td><strong>UPA Zona Leste</strong><br><span class="text-detail">Pregão 015/2026</span></td>
-                                <td>Luvas de Procedimento</td>
-                                <td style="font-weight: 600;">R$ 250.000,00</td>
-                                <td>15/05/2026</td>
-                                <td><span class="badge sucesso">Vencido 🏆</span></td>
-                                <td class="btn-action-group">
-                                    <button class="btn-table" onclick="openClientModal(this)">Ver Histórico</button>
+                            <tr data-id="ED-201" data-org="Hospital das Clínicas" data-objeto="Fornecimento de Fios Cirúrgicos Agulhados" data-abertura="08/06/2026" data-portal="Portal BEC" data-match="Baixa" data-status="Bloqueado" data-valor="R$ 180.000,00" data-prob="14%" data-reason="Certidão do TRT consta como vencida no GED do portal.">
+                                <td><strong>Hosp. Clínicas</strong><br><span class="text-detail">Pregão 201/2026</span></td>
+                                <td>Fios Cirúrgicos</td>
+                                <td style="font-weight: 600;">R$ 180.000,00</td>
+                                <td>
+                                    <div class="win-rate-container">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill rate-low" style="width: 14%;"></div></div>
+                                        <span class="rate-text" style="color: var(--erro);">14%</span>
+                                    </div>
+                                    <span class="ai-badge" style="background-color: #FFEBEE; color: var(--erro);">🚫 Restrição de Compliance</span>
                                 </td>
+                                <td><span class="badge erro" style="margin-top: 4px;">Bloqueado por GED</span></td>
+                                <td><button class="btn-table" style="color: var(--erro); border-color: #FFCDD2;" onclick="location.href='ged-cliente.html'">Regularizar GED</button></td>
                             </tr>
 
                         </tbody>
@@ -254,14 +325,17 @@
                     <tr><td class="label">Portal / Plataforma</td><td id="mPortal">...</td></tr>
                     <tr><td class="label">Objeto Licitado</td><td id="mObjeto">...</td></tr>
                     <tr><td class="label">Data de Disputa</td><td id="mAbertura" style="font-weight: 600;">...</td></tr>
-                    <tr><td class="label">Valor Estimado</td><td id="mValue" style="font-weight: 700; color: var(--sucesso);">R$ 0,00</td></tr>
+                    <tr><td class="label">Valor Estimado</td><td id="mValue" style="font-weight: 700; color: var(--dourado);">R$ 0,00</td></tr>
                 </table>
             </div>
 
-            <div style="background-color: #F8FAFC; padding: 12px; border-radius: 6px; border-left: 4px solid var(--dourado);">
-                <span class="modal-section-title" style="color: var(--dourado);">Parecer Técnico SB Intelligence</span>
-                <p id="mStatusText" style="font-size: 13px; color: var(--texto-escuro); margin-top: 6px;">
-                    Análise pendente. Aguardando sua autorização para iniciar o estudo de viabilidade.
+            <div style="background-color: #E3F2FD; padding: 14px; border-radius: 6px; border-left: 4px solid var(--azul-principal);">
+                <span class="modal-section-title" style="color: var(--azul-principal); font-weight: 700;">Auditoria Estatística (Módulo SAD)</span>
+                <div style="display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px;">
+                    <span><strong>Probabilidade de Vitória:</strong> <span id="mModalProb" style="color:var(--sucesso); font-weight:bold;">0%</span></span>
+                </div>
+                <p id="mModalReason" style="font-size: 12px; color: var(--texto-escuro); line-height: 1.4; border-top: 1px dashed var(--borda); padding-top: 6px; margin-top: 4px;">
+                    Análise preditiva...
                 </p>
             </div>
 
@@ -271,62 +345,54 @@
     </div>
 
     <script>
-        // Filtro de Busca Dinâmico
+        // Filtro de Busca Cruzada (Texto + Probabilidade)
         document.getElementById('searchEditais').addEventListener('keyup', filterTable);
-        document.getElementById('filterStatus').addEventListener('change', filterTable);
+        document.getElementById('filterMatch').addEventListener('change', filterTable);
 
         function filterTable() {
             let textFilter = document.getElementById('searchEditais').value.toLowerCase();
-            let statusFilter = document.getElementById('filterStatus').value.toLowerCase();
+            let matchFilter = document.getElementById('filterMatch').value;
             let rows = document.querySelectorAll('#editaisTableBody tr');
             
             rows.forEach(row => {
                 let rowText = row.innerText.toLowerCase();
-                let badgeText = row.querySelector('.badge').innerText.toLowerCase();
+                let rowMatch = row.getAttribute('data-match');
                 
                 let matchesText = rowText.includes(textFilter);
-                let matchesStatus = statusFilter === "" || badgeText.includes(statusFilter);
+                let matchesMatch = matchFilter === "" || rowMatch === matchFilter;
 
-                row.style.display = (matchesText && matchesStatus) ? '' : 'none';
+                row.style.display = (matchesText && matchesMatch) ? '' : 'none';
             });
         }
 
-        // Função de Abertura do Modal do Cliente
+        // Função de Abertura do Modal injetando dados do SAD
         function openClientModal(btn) {
             let tr = btn.closest('tr');
             
-            // Popula os dados
             document.getElementById('mId').innerText = tr.getAttribute('data-id');
-            document.getElementById('mTitle').innerText = "Edital: " + tr.querySelector('.text-detail').innerText;
+            document.getElementById('mTitle').innerText = "Edital: " + tr.querySelector('strong').innerText;
             document.getElementById('mOrg').innerText = tr.getAttribute('data-org');
             document.getElementById('mPortal').innerText = tr.getAttribute('data-portal');
             document.getElementById('mObjeto').innerText = tr.getAttribute('data-objeto');
             document.getElementById('mAbertura').innerText = tr.getAttribute('data-abertura');
             document.getElementById('mValue').innerText = tr.getAttribute('data-valor');
+            
+            // Injeção dos dados preditivos no Modal
+            document.getElementById('mModalProb').innerText = tr.getAttribute('data-prob');
+            document.getElementById('mModalReason').innerText = "Justificativa da IA: " + tr.getAttribute('data-reason');
 
             let status = tr.getAttribute('data-status');
             let actionsArea = document.getElementById('modalActions');
-            let statusText = document.getElementById('mStatusText');
 
-            // Personaliza o texto e botões com base no status do edital
             if (status === "Novo Match") {
-                statusText.innerHTML = "Nosso robô identificou este edital com <strong>Alta Compatibilidade</strong> ao seu portfólio. Autorize a participação para que nossos consultores calculem as margens e a documentação necessária.";
                 actionsArea.innerHTML = `
                     <button class="btn-table" onclick="alert('Baixando edital original...')">Baixar Edital PDF</button>
                     <button class="btn-novo" style="background:var(--sucesso);" onclick="autorizar(this, '${tr.getAttribute('data-id')}')">Autorizar Consultoria a Participar</button>
                 `;
             } else if (status === "Autorizado") {
-                statusText.innerHTML = "Autorização recebida! O Sistema de Apoio à Decisão (SAD) da SB está analisando o histórico de preços dos concorrentes para formular a melhor estratégia de lances.";
                 actionsArea.innerHTML = `<button class="btn-table" onclick="document.getElementById('clientModal').classList.remove('active')">Fechar Aba</button>`;
             } else if (status === "Em Disputa") {
-                statusText.innerHTML = "A sala de disputa está aberta <strong>AGORA</strong>. Seu consultor técnico está operando a rodada de lances competitivos em nome da sua empresa.";
-                actionsArea.innerHTML = `<button class="btn-novo" style="background:var(--dourado);" onclick="alert('Abrindo visualização simulada da sala de disputa...')">Visualizar Tela do Consultor</button>`;
-            } else if (status === "Vencido") {
-                statusText.innerHTML = "Vitória Homologada! O órgão já publicou o resultado final e a emissão de nota de empenho está liberada. Parabéns por mais um contrato ganho!";
-                actionsArea.innerHTML = `
-                    <button class="btn-table" onclick="alert('Baixando Diário Oficial...')">Baixar Homologação</button>
-                    <button class="btn-novo" style="background:var(--azul-principal);" onclick="alert('Abrindo detalhes do comissionamento...')">Ver Fechamento Financeiro</button>
-                `;
+                actionsArea.innerHTML = `<button class="btn-novo" style="background:var(--dourado);" onclick="alert('Abrindo sala de disputa ao vivo...')">Visualizar Sala de Lances 🔴</button>`;
             }
 
             document.getElementById('clientModal').classList.add('active');
@@ -342,9 +408,8 @@
             btn.innerHTML = "Participação Autorizada ✓";
             btn.style.backgroundColor = "var(--texto-secundario)";
             btn.disabled = true;
-            alert(`O edital ${id} foi enviado para a fila de Análise (SAD) da SB Intelligence! O status mudará em alguns minutos.`);
+            alert(`O edital ${id} foi enviado com sucesso para a esteira comercial da SB Intelligence!`);
             
-            // Simulação de fechamento e atualização da tabela (Visual)
             setTimeout(() => {
                 document.getElementById('clientModal').classList.remove('active');
                 let tr = document.querySelector(`tr[data-id="${id}"]`);
@@ -354,7 +419,19 @@
                 tr.querySelector('.badge').innerText = "Análise SB (SAD)";
                 tr.setAttribute('data-status', 'Autorizado');
                 tr.querySelector('.btn-novo').outerHTML = `<button class="btn-table" onclick="openClientModal(this)">Ver Detalhes</button>`;
-            }, 800);
+            }, 600);
+        }
+
+        // Funções do Sino de Notificação
+        function toggleNotif() {
+            document.getElementById('notifMenu').classList.toggle('active');
+            document.querySelector('.notification-bell').classList.remove('has-notification');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.notification-bell')) {
+                document.querySelectorAll(".notif-menu").forEach(m => m.classList.remove('active'));
+            }
         }
     </script>
 </body>

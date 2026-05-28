@@ -1,25 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>SB Intelligence System - Acesso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SB Intelligence System | Login</title>
+    <!-- Link para o CSS global -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f7f6; }
-        .login-box { text-align: center; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .btn-link { display: block; margin: 10px 0; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-        .btn-gestor { background-color: #0B2146; color: white; }
-        .btn-cliente { background-color: #C89B3C; color: white; }
-    </style>
+    <!-- Link para o Javascript de login -->
+    <script src="assets/js/login.js" defer></script>
 </head>
-<body>
+<body class="login-body">
 
-    <div class="login-box">
+    <!-- LADO ESQUERDO: Apresentação do Projeto -->
+    <div class="project-pitch">
         <h1>SB Intelligence System</h1>
-        <p>Selecione seu perfil de acesso:</p>
+        <p class="subtitle">
+            O Cérebro Operacional para Licitações Públicas. Um Sistema de Apoio à Decisão (SAD) projetado para automatizar, prever e gerenciar o ciclo de vendas para distribuidoras de saúde.
+        </p>
         
-        <a href="views/gestor/dashboard-admin.html" class="btn-link btn-gestor">Entrar como Gestor</a>
-        <a href="views/cliente/dashboard-cliente.html" class="btn-link btn-cliente">Entrar como Cliente</a>
+        <ul class="feature-list">
+            <li>
+                <span>✓</span>
+                <div>
+                    <strong>Web Scraper Inteligente</strong><br>
+                    Varredura automática de editais governamentais.
+                </div>
+            </li>
+            <li>
+                <span>✓</span>
+                <div>
+                    <strong>Apoio à Decisão (SAD)</strong><br>
+                    Análise de risco e sugestão de lances baseada em histórico.
+                </div>
+            </li>
+            <li>
+                <span>✓</span>
+                <div>
+                    <strong>Gestão Eletrônica (GED)</strong><br>
+                    Controle automatizado de validade de certidões e balanços.
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- LADO DIREITO: Caixa de Login Flutuante -->
+    <div class="login-box-container">
+        <h2>Acessar o Sistema</h2>
+        <p>Insira suas credenciais para continuar.</p>
+
+        <!-- O formulário chama a função JS ao ser enviado -->
+        <form id="form-login">
+            <div class="form-group-login">
+                <label for="email">E-mail corporativo</label>
+                <input type="email" id="email" class="form-control" placeholder="leila.giangiardi@ufrpe.br" required>
+            </div>
+            
+            <div class="form-group-login">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <div class="form-group-login" style="margin-top: 10px;">
+                <label for="perfil">Selecione o Módulo de Acesso:</label>
+                <select id="perfil" class="form-control">
+                    <option value="gestor">Acesso Gestor (Admin/Consultor)</option>
+                    <option value="cliente">Acesso Cliente Final</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
     </div>
 
 </body>
